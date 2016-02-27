@@ -118,31 +118,31 @@ func BaseIcosahedron() (WingedMap, error){
             vertex1: 2, vertex2: 4,
             faceA: 1, faceB: 12,
             prevA: 0, nextA: 1,
-            prevB: 0, nextB: 0,
+            prevB: 21, nextB: 20,
         }, // 5
         {
             vertex1: 4, vertex2: 8,
             faceA: 2, faceB: 14,
             prevA: 1, nextA: 2,
-            prevB: 0, nextB: 0,
+            prevB: 23, nextB: 22,
         }, // 6
         {
             vertex1: 8, vertex2: 10,
             faceA: 3, faceB: 16,
             prevA: 2, nextA: 3,
-            prevB: 0, nextB: 0,
+            prevB: 25, nextB: 24,
         }, // 7
         {
             vertex1: 10, vertex2: 5,
             faceA: 4, faceB: 18,
             prevA: 3, nextA: 4,
-            prevB: 0, nextB: 0,
+            prevB: 27, nextB: 26,
         }, // 8
         {
             vertex1: 5, vertex2: 2,
             faceA: 0, faceB: 10,
             prevA: 4, nextA: 0,
-            prevB: 0, nextB: 0,
+            prevB: 29, nextB: 28,
         }, // 9
         
         // cap 2 around vertex 3
@@ -151,44 +151,64 @@ func BaseIcosahedron() (WingedMap, error){
         {
             vertex1: 3, vertex2: 1,
             faceA: 5, faceB: 6,
+            prevA: 14, nextA: 19,
+            prevB: 15, nextB: 11,
         }, // 10
         {
             vertex1: 3, vertex2: 7,
             faceA: 6, faceB: 7,
+            prevA: 10, nextA: 15,
+            prevB: 16, nextB: 12,
         }, // 11
         {
             vertex1: 3, vertex2: 11,
             faceA: 7, faceB: 8,
+            prevA: 11, nextA: 16,
+            prevB: 17, nextB: 13,
         }, // 12
         {
             vertex1: 3, vertex2: 9,
             faceA: 8, faceB: 9,
+            prevA: 12, nextA: 17,
+            prevB: 18, nextB: 14,
         }, // 13
         {
             vertex1: 3, vertex2: 6,
             faceA: 9, faceB: 5,
+            prevA: 13, nextA: 18,
+            prevB: 19, nextB: 10,
         }, // 14
         
         // ring of 5
         {
             vertex1: 1, vertex2: 7,
             faceA: 6, faceB: 17,
+            prevA: 11, nextA: 10,
+            prevB: 25, nextB: 26,
         }, // 15
         {
             vertex1: 7, vertex2: 11,
             faceA: 7, faceB: 19,
+            prevA: 12, nextA: 11,
+            prevB: 27, nextB: 28,
         }, // 16
         {
             vertex1: 11, vertex2: 9,
             faceA: 8, faceB: 11,
+            prevA: 13, nextA: 12,
+            prevB: 29, nextB: 20,
         }, // 17
         {
             vertex1: 9, vertex2: 6,
             faceA: 9, faceB: 13,
+            prevA: 14, nextA: 13,
+            prevB: 21, nextB: 22,
         }, // 18
         {
             vertex1: 6, vertex2: 1,
             faceA: 5, faceB: 15,
+            prevA: 10, nextA: 14,
+            prevB: 23, nextB: 24,
         }, // 19
         
         
@@ -199,42 +219,62 @@ func BaseIcosahedron() (WingedMap, error){
         {
             vertex1: 2, vertex2: 9,
             faceA: 11, faceB: 12,
+            prevA: 17, nextA: 29,
+            prevB: 5, nextB: 21,
         }, // 20
         {
             vertex1: 9, vertex2: 4,
             faceA: 12, faceB: 13,
+            prevA: 20, nextA: 5,
+            prevB: 22, nextB: 18,
         }, // 21
         {
             vertex1: 4, vertex2: 6,
             faceA: 13, faceB: 14,
+            prevA: 18, nextA: 21,
+            prevB: 6, nextB: 23,
         }, // 22
         {
             vertex1: 6, vertex2: 8,
             faceA: 14, faceB: 15,
+            prevA: 22, nextA: 6,
+            prevB: 24, nextB: 19,
         }, // 23
         {
             vertex1: 8, vertex2: 1,
             faceA: 15, faceB: 16,
+            prevA: 19, nextA: 23,
+            prevB: 7, nextB: 25,
         }, // 24
         {
             vertex1: 1, vertex2: 10,
             faceA: 16, faceB: 17,
+            prevA: 24, nextA: 7,
+            prevB: 26, nextB: 15,
         }, // 25
         {
             vertex1: 10, vertex2: 7,
             faceA: 17, faceB: 18,
+            prevA: 15, nextA: 25,
+            prevB: 8, nextB: 27,
         }, // 26
         {
             vertex1: 7, vertex2: 5,
             faceA: 18, faceB: 19,
+            prevA: 26, nextA: 8,
+            prevB: 28, nextB: 16,
         }, // 27
         {
             vertex1: 5, vertex2: 11,
             faceA: 19, faceB: 10,
+            prevA: 16, nextA: 27,
+            prevB: 9, nextB: 29,
         }, // 28
         {
             vertex1: 11, vertex2: 2,
             faceA: 10, faceB: 11,
+            prevA: 28, nextA: 9,
+            prevB: 20, nextB: 17,
         }, // 29
         
     }

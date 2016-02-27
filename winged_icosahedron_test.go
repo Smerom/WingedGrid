@@ -8,7 +8,7 @@ import (
 // square tolerance for floating point equality
 const tolerance = .00000001
 
-func TestBaseIcosahedron(t *testing.T) {
+func TestBaseIcosahedronEdges(t *testing.T){
     var baseIcosahedron WingedMap
     baseIcosahedron, _ = BaseIcosahedron()
     // Edge length should be 2 for each edge
@@ -44,6 +44,19 @@ func TestBaseIcosahedron(t *testing.T) {
             t.Errorf("Face %d has %d edges, expected 3.", index, count)
         }
     }
+}
+func TestBaseIcosahedronVertecies(t *testing.T) {
+    var baseIcosahedron WingedMap
+    baseIcosahedron, _ = BaseIcosahedron()
+    if &baseIcosahedron == nil {} // shut up go compiler
+    t.Error("PENDING")
+}
+
+
+func TestBaseIcosahedronFaces(t *testing.T) {
+    var baseIcosahedron WingedMap
+    baseIcosahedron, _ = BaseIcosahedron()
+    
     // face edges should be traversable (ie edge.face(a).next.next.next should be edge)
     for index, face := range baseIcosahedron.faces {
         // pick an edge, make sure after three unique edges, we are back to the first
@@ -240,7 +253,4 @@ func TestBaseIcosahedron(t *testing.T) {
             t.Errorf("center and normal not parellel for face: %d", index)
         }
     }//*/
-    
-    // each vertex should have 5 edges
-
 }
