@@ -45,19 +45,32 @@ func TestBaseIcosahedronEdges(t *testing.T){
         }
     }
 }
+
 func TestBaseIcosahedronVertecies(t *testing.T) {
     var baseIcosahedron WingedMap
     baseIcosahedron, _ = BaseIcosahedron()
     if &baseIcosahedron == nil {} // shut up go compiler
-    t.Error("PENDING")
+    // each vertex should belong to 5 edges
+    var count [12]int
+    // loop through each edge
+    for _, edge := range baseIcosahedron.edges {
+        count[edge.vertex1] = count[edge.vertex1] + 1
+        count[edge.vertex2] = count[edge.vertex2] + 1
+    }
+    // check edge count for each vertex
+    for index, edgeCount := range count {
+        if edgeCount != 5 {
+            t.Errorf("Vertex %d belongs to %d edges, expected 5.", index, edgeCount)
+        }
+    }
 }
-
 
 func TestBaseIcosahedronFaces(t *testing.T) {
     var baseIcosahedron WingedMap
     baseIcosahedron, _ = BaseIcosahedron()
     
-    // face edges should be traversable (ie edge.face(a).next.next.next should be edge)
+    // face edges should be a traversable triangle
+    //   (ie edge.face(a).next.next.next should == edge)
     for index, face := range baseIcosahedron.faces {
         // pick an edge, make sure after three unique edges, we are back to the first
         firstIndex := face.edges[0]
@@ -105,8 +118,8 @@ func TestBaseIcosahedronFaces(t *testing.T) {
         }
     }
     // face normal should point away from origin
-    //  if edgeQ is clockwise from edgeP, the vectors away from their shared vertex
-    //  vertexP and vertexQ should produce a cross product parrallel to the center
+    //  if edgeQ is clockwise from edgeP, the vectors away from their shared vertex,
+    //  vectorP and vectorQ should produce a cross product parrallel to the center
     //  of the face (not anti-parrallel)
     for index, face := range baseIcosahedron.faces {
         edgeP := baseIcosahedron.edges[face.edges[0]]
@@ -252,5 +265,5 @@ func TestBaseIcosahedronFaces(t *testing.T) {
              
             t.Errorf("center and normal not parellel for face: %d", index)
         }
-    }//*/
+    }
 }
