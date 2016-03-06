@@ -9,7 +9,7 @@ import (
 const tolerance = .00000001
 
 func TestBaseIcosahedronEdges(t *testing.T){
-    var baseIcosahedron WingedMap
+    var baseIcosahedron WingedGrid
     baseIcosahedron, _ = BaseIcosahedron()
     // Edge length should be 2 for each edge
     for index, edge := range baseIcosahedron.Edges {
@@ -47,7 +47,7 @@ func TestBaseIcosahedronEdges(t *testing.T){
 }
 
 func TestBaseIcosahedronVertecies(t *testing.T) {
-    var baseIcosahedron WingedMap
+    var baseIcosahedron WingedGrid
     baseIcosahedron, _ = BaseIcosahedron()
     if &baseIcosahedron == nil {} // shut up go compiler
     // each vertex should belong to 5 edges
@@ -66,7 +66,7 @@ func TestBaseIcosahedronVertecies(t *testing.T) {
 }
 
 func TestBaseIcosahedronFaces(t *testing.T) {
-    var baseIcosahedron WingedMap
+    var baseIcosahedron WingedGrid
     baseIcosahedron, _ = BaseIcosahedron()
     
     // face edges should be a traversable triangle
@@ -265,6 +265,21 @@ func TestBaseIcosahedronFaces(t *testing.T) {
               (normal[2] - center[2])*(normal[2] - center[2])>tolerance   ) {
              
             t.Errorf("center and normal not parellel for face: %d", index)
+        }
+    }
+}
+
+func TestBaseIcosahedronFaceEdgeOrdering(t *testing.T) {
+    var baseIcosahedron WingedGrid
+    baseIcosahedron, _ = BaseIcosahedron()
+    
+    for index, _ := range baseIcosahedron.Faces {
+        correct, err := FaceEdgesMatchesOrderFromEdge(baseIcosahedron, int32(index))
+        if err != nil {
+            t.Errorf("Error testing order: %s", err)
+        }
+        if !correct {
+            t.Errorf("Face %d does not have edges in correct order.", index)
         }
     }
 }

@@ -4,35 +4,9 @@ import (
     
 )
 const goldenRatio = 1.61803398875
-type WingedFace struct {
-    // three for a triangular tiling, but support others
-    // index of edge in wingedMap
-    Edges []int32
-}
 
-type WingedEdge struct {
-    // index of vertices in winged map
-    Vertex1, Vertex2 int32
-    // index of faces in winged map
-    FaceA, FaceB int32
-    // index of edges in winged map for face A and face B
-    PrevA, NextA, PrevB, NextB int32
-}
-
-type WingedVertex struct {
-    Coords [3]float64
-    Edges []int32
-}
-
-type WingedMap struct {
-    Faces []WingedFace
-    Edges []WingedEdge
-    Vertices []WingedVertex
-}
-
-
-func BaseIcosahedron() (WingedMap, error){
-    var icosahedron WingedMap
+func BaseIcosahedron() (WingedGrid, error){
+    var icosahedron WingedGrid
     
     icosahedron.Faces = []WingedFace {
         // cap 1

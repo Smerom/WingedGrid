@@ -4,8 +4,8 @@ import (
     
 )
 
-func (WingedMap )CreateDual(scaleSideLength bool) (WingedMap, error) {
-    var dualMap WingedMap
+func (WingedGrid )CreateDual(scaleSideLength bool) (WingedGrid, error) {
+    var dualMap WingedGrid
     
     
     return dualMap, nil
