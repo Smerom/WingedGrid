@@ -41,14 +41,14 @@ func TestPrevEdgeForFace(t *testing.T) {
     // should return the correct index for face A and B
     index, err := theEdge.PrevEdgeForFace(5)
     if err != nil {
-        t.Errorf("Unexpcted error retrieving next edge: %s",err)
+        t.Errorf("Unexpcted error retrieving prev edge: %s",err)
     }
     if index != 7 {
         t.Error("Recieved incorrect index.")
     }
     index, err = theEdge.PrevEdgeForFace(6)
     if err != nil {
-        t.Errorf("Unexpcted error retrieving next edge: %s",err)
+        t.Errorf("Unexpcted error retrieving prev edge: %s",err)
     }
     if index != 8 {
         t.Error("Recieved incorrect index.")
@@ -61,9 +61,57 @@ func TestPrevEdgeForFace(t *testing.T) {
 }
 
 func TestFirstVertexForFace(t *testing.T) {
-    t.Fail()
+    var theEdge WingedEdge
+    theEdge.FaceA = 9
+    theEdge.FaceB = 10
+    theEdge.FirstVertexA = 11
+    theEdge.FirstVertexB = 12
+    // should return the correct index for face A and B
+    index, err := theEdge.FirstVertexForFace(9)
+    if err != nil {
+        t.Errorf("Unexpcted error retrieving first vertex: %s",err)
+    }
+    if index != 11 {
+        t.Error("Recieved incorrect index.")
+    }
+    index, err = theEdge.FirstVertexForFace(10)
+    if err != nil {
+        t.Errorf("Unexpcted error retrieving first vertex: %s",err)
+    }
+    if index != 12 {
+        t.Error("Recieved incorrect index.")
+    }
+    // should return error if given face not associated with face
+    _, err = theEdge.FirstVertexForFace(1141)
+    if err == nil {
+        t.Error("Expected an error for face not associated with edge.")
+    }
 }
 
 func TestSecondVertexForFace(t *testing.T) {
-    t.Fail()
+    var theEdge WingedEdge
+    theEdge.FaceA = 13
+    theEdge.FaceB = 14
+    theEdge.FirstVertexA = 15
+    theEdge.FirstVertexB = 16
+    // should return the correct index for face A and B
+    index, err := theEdge.SecondVertexForFace(13)
+    if err != nil {
+        t.Errorf("Unexpcted error retrieving second vertex: %s",err)
+    }
+    if index != 16 {
+        t.Error("Recieved incorrect index.")
+    }
+    index, err = theEdge.SecondVertexForFace(14)
+    if err != nil {
+        t.Errorf("Unexpcted error retrieving second vertex: %s",err)
+    }
+    if index != 15 {
+        t.Error("Recieved incorrect index.")
+    }
+    // should return error if given face not associated with face
+    _, err = theEdge.SecondVertexForFace(1121)
+    if err == nil {
+        t.Error("Expected an error for face not associated with edge.")
+    }
 }

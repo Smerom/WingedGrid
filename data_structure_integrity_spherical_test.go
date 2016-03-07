@@ -2,10 +2,26 @@ package wingedGrid
 
 import (
     "errors"
+    //"fmt"
     "math"
 )
 // for winged grids expected to be spherical with tiles facing away from the origin
 
+// returns whether the edge has its vertices ordered correctly, 
+//   such that FirstVertexA it the first vertex encounter when clockwise traversing
+//   FaceA
+func EdgeVertsInCorrectOrientation(theGrid WingedGrid, edgeIndex int32) (bool, error){
+    var theEdge WingedEdge = theGrid.Edges[edgeIndex]
+    var nextEdge WingedEdge = theGrid.Edges[theEdge.NextA]
+    // second clockwise vertex on theEdge should be the same as the first for 
+    //   nextEdgeA for faceA, only need to test for one pair
+    // check with second vertex for next edge incase the next edge is the wrong one
+    if theEdge.FirstVertexB == nextEdge.FirstVertexA ||
+       theEdge.FirstVertexB == nextEdge.FirstVertexB {
+        return true, nil
+    }
+    return false, errors.New("This Edge has wrong order")
+}
 // Returns whether the edge order from the face index matches that of the edges
 //  taken from edge.next
 func FaceEdgesMatchesOrderFromEdge(theGrid WingedGrid, faceIndex int32) (bool, error) {
@@ -26,7 +42,7 @@ func FaceEdgesMatchesOrderFromEdge(theGrid WingedGrid, faceIndex int32) (bool, e
             return false, nil
         }
     }
-    return false, nil
+    return true, nil
 }
 // Returns whether a the vertices of a face are within square tolerance distance
 //  from the plane of the first three vertices

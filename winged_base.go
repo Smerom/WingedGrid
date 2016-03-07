@@ -20,7 +20,7 @@ type WingedFace struct {
 
 type WingedEdge struct {
     // index of vertices in winged map
-    Vertex1, Vertex2 int32
+    FirstVertexA, FirstVertexB int32
     // index of faces in winged map
     FaceA, FaceB int32
     // index of edges in winged map for face A and face B
@@ -60,8 +60,18 @@ func (theEdge WingedEdge)PrevEdgeForFace(faceIndex int32) (int32, error){
 // returns the first vertex encountered on this edge when traversing the face 
 //  clockwise
 func (theEdge WingedEdge)FirstVertexForFace(faceIndex int32) (int32, error) {
-    return 0, nil
+    if theEdge.FaceA == faceIndex {
+        return theEdge.FirstVertexA, nil
+    } else if theEdge.FaceB == faceIndex {
+        return theEdge.FirstVertexB, nil
+    }
+    return -1, errors.New("Edge not associated with face.")
 }
 func (theEdge WingedEdge)SecondVertexForFace(faceIndex int32) (int32, error) {
-    return 0, nil
+    if theEdge.FaceA == faceIndex {
+        return theEdge.FirstVertexB, nil
+    } else if theEdge.FaceB == faceIndex {
+        return theEdge.FirstVertexA, nil
+    }
+    return -1, errors.New("Edge not associated with face.")
 }

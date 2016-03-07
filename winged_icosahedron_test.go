@@ -14,14 +14,14 @@ func TestBaseIcosahedronEdges(t *testing.T){
     // Edge length should be 2 for each edge
     for index, edge := range baseIcosahedron.Edges {
         var dx, dy, dz float64
-        dx = baseIcosahedron.Vertices[edge.Vertex1].Coords[0] - 
-                baseIcosahedron.Vertices[edge.Vertex2].Coords[0]
+        dx = baseIcosahedron.Vertices[edge.FirstVertexA].Coords[0] - 
+                baseIcosahedron.Vertices[edge.FirstVertexB].Coords[0]
                 
-        dy = baseIcosahedron.Vertices[edge.Vertex1].Coords[1] - 
-                baseIcosahedron.Vertices[edge.Vertex2].Coords[1]
+        dy = baseIcosahedron.Vertices[edge.FirstVertexA].Coords[1] - 
+                baseIcosahedron.Vertices[edge.FirstVertexB].Coords[1]
                 
-        dz = baseIcosahedron.Vertices[edge.Vertex1].Coords[2] - 
-                baseIcosahedron.Vertices[edge.Vertex2].Coords[2]
+        dz = baseIcosahedron.Vertices[edge.FirstVertexA].Coords[2] - 
+                baseIcosahedron.Vertices[edge.FirstVertexB].Coords[2]
                 
         length := math.Sqrt(dx*dx + dy*dy + dz*dz)
         // square of error within tolerance
@@ -44,6 +44,16 @@ func TestBaseIcosahedronEdges(t *testing.T){
             t.Errorf("Face %d has %d edges, expected 3.", index, count)
         }
     }
+    
+    // verticies should be in correct order
+    for index, _ := range baseIcosahedron.Edges {
+        correct, err := EdgeVertsInCorrectOrientation(baseIcosahedron, int32(index))
+        if err != nil {
+            t.Errorf("Vertex ordering error for edge %d: %s", index, err)
+        } else if !correct {
+            t.Errorf("Vertices not in correct order somewhere near edge: %d", index)
+        }
+    }
 }
 
 func TestBaseIcosahedronVertecies(t *testing.T) {
@@ -54,8 +64,8 @@ func TestBaseIcosahedronVertecies(t *testing.T) {
     var count [12]int
     // loop through each edge
     for _, edge := range baseIcosahedron.Edges {
-        count[edge.Vertex1] = count[edge.Vertex1] + 1
-        count[edge.Vertex2] = count[edge.Vertex2] + 1
+        count[edge.FirstVertexA] = count[edge.FirstVertexA] + 1
+        count[edge.FirstVertexB] = count[edge.FirstVertexB] + 1
     }
     // check edge count for each vertex
     for index, edgeCount := range count {
@@ -121,150 +131,12 @@ func TestBaseIcosahedronFaces(t *testing.T) {
     //  if edgeQ is clockwise from edgeP, the vectors away from their shared vertex,
     //  vectorP and vectorQ should produce a cross product parrallel to the center
     //  of the face (not anti-parrallel)
-    for index, face := range baseIcosahedron.Faces {
-        edgeP := baseIcosahedron.Edges[face.Edges[0]]
-        var edgeQ WingedEdge
-        // get next edge
-        if edgeP.FaceA == int32(index) {
-            edgeQ = baseIcosahedron.Edges[edgeP.NextA]
-        } else if edgeP.FaceB == int32(index) {
-            edgeQ = baseIcosahedron.Edges[edgeP.NextB]
-        } else {
-            t.Errorf("Edge %d does not point to face %d.",face.Edges[0],index)
-        }
-        
-        var vectorP, vectorQ, center [3]float64
-        // find the shared vertex and make the two vectors
-        //  also grab the center, since we've checked that the triangle is equilateral
-        //  the centroid will do
-        //  could be put into a function
-        if edgeP.Vertex1 == edgeQ.Vertex1 {
-            vectorP[0] = baseIcosahedron.Vertices[edgeP.Vertex2].Coords[0] -
-                            baseIcosahedron.Vertices[edgeP.Vertex1].Coords[0]
-            vectorP[1] = baseIcosahedron.Vertices[edgeP.Vertex2].Coords[1] -
-                            baseIcosahedron.Vertices[edgeP.Vertex1].Coords[1]
-            vectorP[2] = baseIcosahedron.Vertices[edgeP.Vertex2].Coords[2] -
-                            baseIcosahedron.Vertices[edgeP.Vertex1].Coords[2]
-                            
-            vectorQ[0] = baseIcosahedron.Vertices[edgeQ.Vertex2].Coords[0] -
-                            baseIcosahedron.Vertices[edgeQ.Vertex1].Coords[0]
-            vectorQ[1] = baseIcosahedron.Vertices[edgeQ.Vertex2].Coords[1] -
-                            baseIcosahedron.Vertices[edgeQ.Vertex1].Coords[1]
-            vectorQ[2] = baseIcosahedron.Vertices[edgeQ.Vertex2].Coords[2] -
-                            baseIcosahedron.Vertices[edgeQ.Vertex1].Coords[2]
-            // centroid
-            center[0] = (baseIcosahedron.Vertices[edgeP.Vertex1].Coords[0] + 
-                           baseIcosahedron.Vertices[edgeP.Vertex2].Coords[0] +
-                           baseIcosahedron.Vertices[edgeQ.Vertex2].Coords[0]) / 3
-            center[1] = (baseIcosahedron.Vertices[edgeP.Vertex1].Coords[1] + 
-                           baseIcosahedron.Vertices[edgeP.Vertex2].Coords[1] +
-                           baseIcosahedron.Vertices[edgeQ.Vertex2].Coords[1]) / 3
-            center[2] = (baseIcosahedron.Vertices[edgeP.Vertex1].Coords[2] + 
-                           baseIcosahedron.Vertices[edgeP.Vertex2].Coords[2] +
-                           baseIcosahedron.Vertices[edgeQ.Vertex2].Coords[2]) / 3
-        } else if edgeP.Vertex1 == edgeQ.Vertex2 {
-            vectorP[0] = baseIcosahedron.Vertices[edgeP.Vertex2].Coords[0] -
-                            baseIcosahedron.Vertices[edgeP.Vertex1].Coords[0]
-            vectorP[1] = baseIcosahedron.Vertices[edgeP.Vertex2].Coords[1] -
-                            baseIcosahedron.Vertices[edgeP.Vertex1].Coords[1]
-            vectorP[2] = baseIcosahedron.Vertices[edgeP.Vertex2].Coords[2] -
-                            baseIcosahedron.Vertices[edgeP.Vertex1].Coords[2]
-                            
-            vectorQ[0] = baseIcosahedron.Vertices[edgeQ.Vertex1].Coords[0] -
-                            baseIcosahedron.Vertices[edgeQ.Vertex2].Coords[0]
-            vectorQ[1] = baseIcosahedron.Vertices[edgeQ.Vertex1].Coords[1] -
-                            baseIcosahedron.Vertices[edgeQ.Vertex2].Coords[1]
-            vectorQ[2] = baseIcosahedron.Vertices[edgeQ.Vertex1].Coords[2] -
-                            baseIcosahedron.Vertices[edgeQ.Vertex2].Coords[2]
-            // centroid
-            center[0] = (baseIcosahedron.Vertices[edgeP.Vertex1].Coords[0] + 
-                           baseIcosahedron.Vertices[edgeP.Vertex2].Coords[0] +
-                           baseIcosahedron.Vertices[edgeQ.Vertex1].Coords[0]) / 3
-            center[1] = (baseIcosahedron.Vertices[edgeP.Vertex1].Coords[1] + 
-                           baseIcosahedron.Vertices[edgeP.Vertex2].Coords[1] +
-                           baseIcosahedron.Vertices[edgeQ.Vertex1].Coords[1]) / 3
-            center[2] = (baseIcosahedron.Vertices[edgeP.Vertex1].Coords[2] + 
-                           baseIcosahedron.Vertices[edgeP.Vertex2].Coords[2] +
-                           baseIcosahedron.Vertices[edgeQ.Vertex1].Coords[2]) / 3
-        } else if edgeP.Vertex2 == edgeQ.Vertex1 {
-            vectorP[0] = baseIcosahedron.Vertices[edgeP.Vertex1].Coords[0] -
-                            baseIcosahedron.Vertices[edgeP.Vertex2].Coords[0]
-            vectorP[1] = baseIcosahedron.Vertices[edgeP.Vertex1].Coords[1] -
-                            baseIcosahedron.Vertices[edgeP.Vertex2].Coords[1]
-            vectorP[2] = baseIcosahedron.Vertices[edgeP.Vertex1].Coords[2] -
-                            baseIcosahedron.Vertices[edgeP.Vertex2].Coords[2]
-                            
-            vectorQ[0] = baseIcosahedron.Vertices[edgeQ.Vertex2].Coords[0] -
-                            baseIcosahedron.Vertices[edgeQ.Vertex1].Coords[0]
-            vectorQ[1] = baseIcosahedron.Vertices[edgeQ.Vertex2].Coords[1] -
-                            baseIcosahedron.Vertices[edgeQ.Vertex1].Coords[1]
-            vectorQ[2] = baseIcosahedron.Vertices[edgeQ.Vertex2].Coords[2] -
-                            baseIcosahedron.Vertices[edgeQ.Vertex1].Coords[2]
-            // centroid
-            center[0] = (baseIcosahedron.Vertices[edgeP.Vertex1].Coords[0] + 
-                           baseIcosahedron.Vertices[edgeP.Vertex2].Coords[0] +
-                           baseIcosahedron.Vertices[edgeQ.Vertex2].Coords[0]) / 3
-            center[1] = (baseIcosahedron.Vertices[edgeP.Vertex1].Coords[1] + 
-                           baseIcosahedron.Vertices[edgeP.Vertex2].Coords[1] +
-                           baseIcosahedron.Vertices[edgeQ.Vertex2].Coords[1]) / 3
-            center[2] = (baseIcosahedron.Vertices[edgeP.Vertex1].Coords[2] + 
-                           baseIcosahedron.Vertices[edgeP.Vertex2].Coords[2] +
-                           baseIcosahedron.Vertices[edgeQ.Vertex2].Coords[2]) / 3
-        } else {
-            // edgeP.vertex2 == edgeQ.vertex2
-            vectorP[0] = baseIcosahedron.Vertices[edgeP.Vertex1].Coords[0] -
-                            baseIcosahedron.Vertices[edgeP.Vertex2].Coords[0]
-            vectorP[1] = baseIcosahedron.Vertices[edgeP.Vertex1].Coords[1] -
-                            baseIcosahedron.Vertices[edgeP.Vertex2].Coords[1]
-            vectorP[2] = baseIcosahedron.Vertices[edgeP.Vertex1].Coords[2] -
-                            baseIcosahedron.Vertices[edgeP.Vertex2].Coords[2]
-                            
-            vectorQ[0] = baseIcosahedron.Vertices[edgeQ.Vertex1].Coords[0] -
-                            baseIcosahedron.Vertices[edgeQ.Vertex2].Coords[0]
-            vectorQ[1] = baseIcosahedron.Vertices[edgeQ.Vertex1].Coords[1] -
-                            baseIcosahedron.Vertices[edgeQ.Vertex2].Coords[1]
-            vectorQ[2] = baseIcosahedron.Vertices[edgeQ.Vertex1].Coords[2] -
-                            baseIcosahedron.Vertices[edgeQ.Vertex2].Coords[2]
-            // centroid
-            center[0] = (baseIcosahedron.Vertices[edgeP.Vertex1].Coords[0] + 
-                           baseIcosahedron.Vertices[edgeP.Vertex2].Coords[0] +
-                           baseIcosahedron.Vertices[edgeQ.Vertex1].Coords[0]) / 3
-            center[1] = (baseIcosahedron.Vertices[edgeP.Vertex1].Coords[1] + 
-                           baseIcosahedron.Vertices[edgeP.Vertex2].Coords[1] +
-                           baseIcosahedron.Vertices[edgeQ.Vertex1].Coords[1]) / 3
-            center[2] = (baseIcosahedron.Vertices[edgeP.Vertex1].Coords[2] + 
-                           baseIcosahedron.Vertices[edgeP.Vertex2].Coords[2] +
-                           baseIcosahedron.Vertices[edgeQ.Vertex1].Coords[2]) / 3
-        }
-        var scaleFactor float64
-        // normalize the center to unit vector
-        scaleFactor = 1/math.Sqrt(center[0]*center[0] + 
-                                  center[1]*center[1] +
-                                  center[2]*center[2])
-                                
-        center[0] = center[0] * scaleFactor
-        center[1] = center[1] * scaleFactor
-        center[2] = center[2] * scaleFactor
-        // find normal to face, cross product!
-        var normal [3]float64
-        normal[0] = vectorP[1]*vectorQ[2] - vectorP[2]*vectorQ[1]
-        normal[1] = -(vectorP[0]*vectorQ[2] - vectorP[2]*vectorQ[0])
-        normal[2] = vectorP[0]*vectorQ[1] - vectorP[1]*vectorQ[0]
-        // normalize it!
-        scaleFactor = 1/math.Sqrt(normal[0]*normal[0] + 
-                                  normal[1]*normal[1] +
-                                  normal[2]*normal[2])
-                                
-        normal[0] = normal[0] * scaleFactor
-        normal[1] = normal[1] * scaleFactor
-        normal[2] = normal[2] * scaleFactor
-        // they should be parallel (not antiparrallel!)
-        //  ie, components should subract to zero, since unit vectors
-        if !( (normal[0] - center[0])*(normal[0] - center[0])>tolerance ||
-              (normal[1] - center[1])*(normal[1] - center[1])>tolerance ||
-              (normal[2] - center[2])*(normal[2] - center[2])>tolerance   ) {
-             
-            t.Errorf("center and normal not parellel for face: %d", index)
+    for index, _ := range baseIcosahedron.Faces {
+        correct, err := FaceOrientation(baseIcosahedron, int32(index), tolerance)
+        if err != nil {
+            t.Errorf("Unexpected error determining face orientation: %s", err)
+        } else if !correct {
+            t.Errorf("Incorrect orientation: center and normal not parellel for face: %d", index)
         }
     }
 }
