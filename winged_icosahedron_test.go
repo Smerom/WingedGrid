@@ -11,8 +11,12 @@ import (
 const tolerance = .00000001
 
 func TestBaseIcosahedronEdgeLength(t *testing.T) {
+    var err error
     var baseIcosahedron WingedGrid
-    baseIcosahedron, _ = BaseIcosahedron()
+    baseIcosahedron, err = BaseIcosahedron()
+    if err != nil {
+        t.Fatalf("Failed to create base icosahedron: %s", err)
+    }
     // tests whether the edges were given plausable vertices, but
     // won't indicate duplicate edges
     // Edge length should be 2 for each edge
@@ -35,8 +39,12 @@ func TestBaseIcosahedronEdgeLength(t *testing.T) {
     }
 }
 func TestBaseIcosahedronEdgesPerFace(t *testing.T) {
+    var err error
     var baseIcosahedron WingedGrid
-    baseIcosahedron, _ = BaseIcosahedron()
+    baseIcosahedron, err = BaseIcosahedron()
+    if err != nil {
+        t.Fatalf("Failed to create base icosahedron: %s", err)
+    }
     // Expecting triangles, each face should have 3 edges
     // For each face with loop through all edges and count
     // the associations.
@@ -57,8 +65,12 @@ func TestBaseIcosahedronEdgesPerFace(t *testing.T) {
 }
 
 func TestBaseIcosahedronEdgeVertexOrder(t *testing.T) {
+    var err error
     var baseIcosahedron WingedGrid
-    baseIcosahedron, _ = BaseIcosahedron()
+    baseIcosahedron, err = BaseIcosahedron()
+    if err != nil {
+        t.Fatalf("Failed to create base icosahedron: %s", err)
+    }
     // Verticies should be in correct order
     // The order doesn't give us any extra information
     // but reduces the number of comparisons needed
@@ -75,8 +87,12 @@ func TestBaseIcosahedronEdgeVertexOrder(t *testing.T) {
 }
 
 func TestBaseIcosahedronVertecies(t *testing.T) {
+    var err error
     var baseIcosahedron WingedGrid
-    baseIcosahedron, _ = BaseIcosahedron()
+    baseIcosahedron, err = BaseIcosahedron()
+    if err != nil {
+        t.Fatalf("Failed to create base icosahedron: %s", err)
+    }
     // Each vertex should belong to 5 edges
     // Along with the edges per face and edge length,
     // this test determines whether we hooked up the edges
@@ -97,61 +113,69 @@ func TestBaseIcosahedronVertecies(t *testing.T) {
 }
 
 func TestBaseIcosahedronFaceTraversability(t *testing.T) {
+    var err error
     var baseIcosahedron WingedGrid
-    baseIcosahedron, _ = BaseIcosahedron()
+    baseIcosahedron, err = BaseIcosahedron()
+    if err != nil {
+        t.Fatalf("Failed to create base icosahedron: %s", err)
+    }
     // face edges should be a traversable triangle
     // (ie edge.face(a).next.next.next should == edge)
     for index, face := range baseIcosahedron.Faces {
         // pick an edge, make sure after three unique edges, we are back to the first
-        firstIndex := face.Edges[0]
-        firstEdge := baseIcosahedron.Edges[firstIndex]
+        firstEdgeIndex := face.Edges[0]
+        firstEdge := baseIcosahedron.Edges[firstEdgeIndex]
         var nextEdge WingedEdge
-        var nextIndex int32
+        var nextEdgeIndex int32
         // get second edge
         if firstEdge.FaceA == int32(index) {
-            nextIndex = firstEdge.NextA
+            nextEdgeIndex = firstEdge.NextA
         } else if firstEdge.FaceB == int32(index) {
-            nextIndex = firstEdge.NextB
+            nextEdgeIndex = firstEdge.NextB
         } else {
             t.Errorf("Edge %d does not point to face %d.",face.Edges[0],index)
         }
         // should not be same as first
-        if nextIndex == firstIndex {
+        if nextEdgeIndex == firstEdgeIndex {
             t.Error("Second edge should not be same as first.")
         }
-        nextEdge = baseIcosahedron.Edges[nextIndex]
+        nextEdge = baseIcosahedron.Edges[nextEdgeIndex]
         // get third edge
         if nextEdge.FaceA == int32(index) {
-            nextIndex = nextEdge.NextA
+            nextEdgeIndex = nextEdge.NextA
         } else if nextEdge.FaceB == int32(index) {
-            nextIndex = nextEdge.NextB
+            nextEdgeIndex = nextEdge.NextB
         } else {
             t.Errorf("Second edge does not point to face %d.", index)
         }
         // should not be same as first
-        if nextIndex == firstIndex {
+        if nextEdgeIndex == firstEdgeIndex {
             t.Error("Third edge should not be same as first.")
         }
-        nextEdge = baseIcosahedron.Edges[nextIndex]
+        nextEdge = baseIcosahedron.Edges[nextEdgeIndex]
         // get fourth edge (only need index)
         if nextEdge.FaceA == int32(index) {
-            nextIndex = nextEdge.NextA
+            nextEdgeIndex = nextEdge.NextA
         } else if nextEdge.FaceB == int32(index) {
-            nextIndex = nextEdge.NextB
+            nextEdgeIndex = nextEdge.NextB
         } else {
             t.Errorf("Third edge does not point to face %d.", index)
         }
         // forth should be the same as the first
-        if nextIndex != firstIndex {
+        if nextEdgeIndex != firstEdgeIndex {
             t.Errorf("Face %d: forth edge does not match the first! Expected a triangle.", index)
-            t.Logf("Expected %d == %d", nextIndex, firstIndex)
+            t.Logf("Expected %d == %d", nextEdgeIndex, firstEdgeIndex)
         }
     }
 }
 
 func TestBaseIcosahedronFaceOrientation(t *testing.T) {
+    var err error
     var baseIcosahedron WingedGrid
-    baseIcosahedron, _ = BaseIcosahedron()
+    baseIcosahedron, err = BaseIcosahedron()
+    if err != nil {
+        t.Fatalf("Failed to create base icosahedron: %s", err)
+    }
         // face normal should point away from origin
     //  if edgeQ is clockwise from edgeP, the vectors away from their shared vertex,
     //  vectorP and vectorQ should produce a cross product parrallel to the center
@@ -167,9 +191,14 @@ func TestBaseIcosahedronFaceOrientation(t *testing.T) {
 }
 
 func TestBaseIcosahedronFaceEdgeOrdering(t *testing.T) {
+    var err error
     var baseIcosahedron WingedGrid
-    baseIcosahedron, _ = BaseIcosahedron()
-    
+    baseIcosahedron, err = BaseIcosahedron()
+    if err != nil {
+        t.Fatalf("Failed to create base icosahedron: %s", err)
+    }
+    // theFace.Edges should have the same order as given by 
+    // edge.NextEdgeForFace(theFace)
     for index, _ := range baseIcosahedron.Faces {
         correct, err := FaceEdgesMatchesOrderFromEdge(baseIcosahedron, int32(index))
         if err != nil {

@@ -9,6 +9,7 @@ import (
 // any wingedGrid
 
 // Returns whether the edge order from the vertex index matches that of the edges
+// NOT YET IMPLEMENTED
 func VertEdgesMatchEdgeOrder(theGrid WingedGrid, vertIndex int32) (bool, error) {
     
     return false, nil
@@ -71,7 +72,7 @@ func FaceOrientation(theGrid WingedGrid, faceIndex int32, tolerance float64) (bo
     var err error
     var theFace WingedFace = theGrid.Faces[faceIndex]
     // find center of face
-    var vectorP, vectorQ, center [3]float64
+    var vectorP, vectorQ, faceCenter [3]float64
     var count float64
     for _, edgeIndex := range theFace.Edges {
         var vertex WingedVertex
@@ -81,16 +82,17 @@ func FaceOrientation(theGrid WingedGrid, faceIndex int32, tolerance float64) (bo
             return false, nil
         }
         vertex = theGrid.Vertices[vertexIndex]
-        center[0] = center[0] + vertex.Coords[0]
-        center[1] = center[1] + vertex.Coords[1]
-        center[2] = center[2] + vertex.Coords[2]
+        faceCenter[0] = faceCenter[0] + vertex.Coords[0]
+        faceCenter[1] = faceCenter[1] + vertex.Coords[1]
+        faceCenter[2] = faceCenter[2] + vertex.Coords[2]
         count = count + 1
     }
-    center[0] = center[0] / count
-    center[1] = center[1] / count
-    center[1] = center[1] / count
+    faceCenter[0] = faceCenter[0] / count
+    faceCenter[1] = faceCenter[1] / count
+    faceCenter[1] = faceCenter[1] / count
     
     // simply use the first two edges, vectors away from their shared vertex
+    // from these we get the face normal vector
     var edgeP, edgeQ WingedEdge
     edgeP = theGrid.Edges[theFace.Edges[0]]
     edgeQ = theGrid.Edges[theFace.Edges[1]]
@@ -134,31 +136,31 @@ func FaceOrientation(theGrid WingedGrid, faceIndex int32, tolerance float64) (bo
     // icosahedron test where I simply subtracted normalized components
     var scaleFactor float64
     // normalize the center to unit vector
-    scaleFactor = 1/math.Sqrt(center[0]*center[0] + 
-                              center[1]*center[1] +
-                              center[2]*center[2])
-    center[0] = center[0] * scaleFactor
-    center[1] = center[1] * scaleFactor
-    center[2] = center[2] * scaleFactor
+    scaleFactor = 1/math.Sqrt(faceCenter[0]*faceCenter[0] + 
+                              faceCenter[1]*faceCenter[1] +
+                              faceCenter[2]*faceCenter[2])
+    faceCenter[0] = faceCenter[0] * scaleFactor
+    faceCenter[1] = faceCenter[1] * scaleFactor
+    faceCenter[2] = faceCenter[2] * scaleFactor
     
     // find normal to face, cross product!
-    var normal [3]float64
-    normal[0] = vectorP[1]*vectorQ[2] - vectorP[2]*vectorQ[1]
-    normal[1] = -(vectorP[0]*vectorQ[2] - vectorP[2]*vectorQ[0])
-    normal[2] = vectorP[0]*vectorQ[1] - vectorP[1]*vectorQ[0]
+    var faceNormal [3]float64
+    faceNormal[0] = vectorP[1]*vectorQ[2] - vectorP[2]*vectorQ[1]
+    faceNormal[1] = -(vectorP[0]*vectorQ[2] - vectorP[2]*vectorQ[0])
+    faceNormal[2] = vectorP[0]*vectorQ[1] - vectorP[1]*vectorQ[0]
     // normalize it!
-    scaleFactor = 1/math.Sqrt(normal[0]*normal[0] + 
-                              normal[1]*normal[1] +
-                              normal[2]*normal[2])
-    normal[0] = normal[0] * scaleFactor
-    normal[1] = normal[1] * scaleFactor
-    normal[2] = normal[2] * scaleFactor
+    scaleFactor = 1/math.Sqrt(faceNormal[0]*faceNormal[0] + 
+                              faceNormal[1]*faceNormal[1] +
+                              faceNormal[2]*faceNormal[2])
+    faceNormal[0] = faceNormal[0] * scaleFactor
+    faceNormal[1] = faceNormal[1] * scaleFactor
+    faceNormal[2] = faceNormal[2] * scaleFactor
     
     // they should be parallel (not antiparrallel!)
     //  ie, components should subract to zero, since unit vectors
-    if !( (normal[0] - center[0])*(normal[0] - center[0])>tolerance ||
-          (normal[1] - center[1])*(normal[1] - center[1])>tolerance ||
-          (normal[2] - center[2])*(normal[2] - center[2])>tolerance   ) {
+    if !((faceNormal[0] - faceCenter[0])*(faceNormal[0] - faceCenter[0])>tolerance ||
+         (faceNormal[1] - faceCenter[1])*(faceNormal[1] - faceCenter[1])>tolerance ||
+         (faceNormal[2] - faceCenter[2])*(faceNormal[2] - faceCenter[2])>tolerance   ) {
          
         return false, nil
     }
