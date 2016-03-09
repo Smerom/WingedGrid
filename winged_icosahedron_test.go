@@ -4,13 +4,17 @@ import (
     "testing"
     "math"
 )
+// NEED:
 // add connectedness test (all edges on a face can be reached from all other edges)
+
 // square tolerance for floating point equality
 const tolerance = .00000001
 
-func TestBaseIcosahedronEdges(t *testing.T){
+func TestBaseIcosahedronEdgeLength(t *testing.T) {
     var baseIcosahedron WingedGrid
     baseIcosahedron, _ = BaseIcosahedron()
+    // tests whether the edges were given plausable vertices, but
+    // won't indicate duplicate edges
     // Edge length should be 2 for each edge
     for index, edge := range baseIcosahedron.Edges {
         var dx, dy, dz float64
@@ -29,7 +33,13 @@ func TestBaseIcosahedronEdges(t *testing.T){
             t.Errorf("Edge %d out of tolerance, length is: %f", index, length)
         }
     }
-    // each face should have 3 edges
+}
+func TestBaseIcosahedronEdgesPerFace(t *testing.T) {
+    var baseIcosahedron WingedGrid
+    baseIcosahedron, _ = BaseIcosahedron()
+    // Expecting triangles, each face should have 3 edges
+    // For each face with loop through all edges and count
+    // the associations.
     for index, _ := range baseIcosahedron.Faces {
         var count int32 = 0
         for _, edge := range baseIcosahedron.Edges {
@@ -43,9 +53,17 @@ func TestBaseIcosahedronEdges(t *testing.T){
         if count != 3 {
             t.Errorf("Face %d has %d edges, expected 3.", index, count)
         }
-    }
-    
-    // verticies should be in correct order
+    } 
+}
+
+func TestBaseIcosahedronEdgeVertexOrder(t *testing.T) {
+    var baseIcosahedron WingedGrid
+    baseIcosahedron, _ = BaseIcosahedron()
+    // Verticies should be in correct order
+    // The order doesn't give us any extra information
+    // but reduces the number of comparisons needed
+    // to create a well formed mesh from the data.
+    // Also useful for finding the dual of the WingedGrid.
     for index, _ := range baseIcosahedron.Edges {
         correct, err := EdgeVertsInCorrectOrientation(baseIcosahedron, int32(index))
         if err != nil {
@@ -59,11 +77,14 @@ func TestBaseIcosahedronEdges(t *testing.T){
 func TestBaseIcosahedronVertecies(t *testing.T) {
     var baseIcosahedron WingedGrid
     baseIcosahedron, _ = BaseIcosahedron()
-    if &baseIcosahedron == nil {} // shut up go compiler
-    // each vertex should belong to 5 edges
+    // Each vertex should belong to 5 edges
+    // Along with the edges per face and edge length,
+    // this test determines whether we hooked up the edges
+    // correctly from the 3 golden retangles.
     var count [12]int
     // loop through each edge
     for _, edge := range baseIcosahedron.Edges {
+        // add one to the count for each vertex referenced by the edge
         count[edge.FirstVertexA] = count[edge.FirstVertexA] + 1
         count[edge.FirstVertexB] = count[edge.FirstVertexB] + 1
     }
@@ -75,12 +96,11 @@ func TestBaseIcosahedronVertecies(t *testing.T) {
     }
 }
 
-func TestBaseIcosahedronFaces(t *testing.T) {
+func TestBaseIcosahedronFaceTraversability(t *testing.T) {
     var baseIcosahedron WingedGrid
     baseIcosahedron, _ = BaseIcosahedron()
-    
     // face edges should be a traversable triangle
-    //   (ie edge.face(a).next.next.next should == edge)
+    // (ie edge.face(a).next.next.next should == edge)
     for index, face := range baseIcosahedron.Faces {
         // pick an edge, make sure after three unique edges, we are back to the first
         firstIndex := face.Edges[0]
@@ -127,7 +147,12 @@ func TestBaseIcosahedronFaces(t *testing.T) {
             t.Logf("Expected %d == %d", nextIndex, firstIndex)
         }
     }
-    // face normal should point away from origin
+}
+
+func TestBaseIcosahedronFaceOrientation(t *testing.T) {
+    var baseIcosahedron WingedGrid
+    baseIcosahedron, _ = BaseIcosahedron()
+        // face normal should point away from origin
     //  if edgeQ is clockwise from edgeP, the vectors away from their shared vertex,
     //  vectorP and vectorQ should produce a cross product parrallel to the center
     //  of the face (not anti-parrallel)

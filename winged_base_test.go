@@ -25,7 +25,7 @@ func TestNextEdgeForFace(t *testing.T) {
     if index != 2 {
         t.Error("Recieved incorrect index.")
     }
-    // should return error if given face not associated with face
+    // should return error if given face not associated with edge
     _, err = theEdge.NextEdgeForFace(1000)
     if err == nil {
         t.Error("Expected an error for face not associated with edge.")
@@ -53,7 +53,7 @@ func TestPrevEdgeForFace(t *testing.T) {
     if index != 8 {
         t.Error("Recieved incorrect index.")
     }
-    // should return error if given face not associated with face
+    // should return error if given face not associated with edge
     _, err = theEdge.PrevEdgeForFace(1111)
     if err == nil {
         t.Error("Expected an error for face not associated with edge.")
@@ -81,7 +81,7 @@ func TestFirstVertexForFace(t *testing.T) {
     if index != 12 {
         t.Error("Recieved incorrect index.")
     }
-    // should return error if given face not associated with face
+    // should return error if given face not associated with edge
     _, err = theEdge.FirstVertexForFace(1141)
     if err == nil {
         t.Error("Expected an error for face not associated with edge.")
@@ -109,7 +109,7 @@ func TestSecondVertexForFace(t *testing.T) {
     if index != 15 {
         t.Error("Recieved incorrect index.")
     }
-    // should return error if given face not associated with face
+    // should return error if given face not associated with edge
     _, err = theEdge.SecondVertexForFace(1121)
     if err == nil {
         t.Error("Expected an error for face not associated with edge.")
