@@ -5,17 +5,18 @@ import (
 )
 // Contains the basic winged edge data structures and functions for traversing
 // the faces, edges, and vertices.
-
+//
 // Surfaces are expected to be orientable
 // orientability allows verticies on edges to be accociated with a particular
 // face such that verticies can be collected for a face without comparison
-// between edges (we don't need to test which vertex two edges share.
-
+// between edges (we don't need to test which vertex two edges share.)
+//
 // Primary information is held in WingedEdge and WingedVertex.Coords
 // other information is duplicate for faster traversal of the grid
+//
+// INDEXES ARE USED INSTEAD OF POINTERS IN ALL STRUCTURES AS THESE STRUCTURES WILL
+// BE SENT OVER A NETWORK AS THEIR PRIMARY USE
 
-// Indexes are used instead of pointers as these structures will be sent over a
-// network as their primary use
 
 // represents a face of a tiled surface
 type WingedFace struct {
