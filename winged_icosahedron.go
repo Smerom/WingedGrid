@@ -51,22 +51,22 @@ func BaseIcosahedron() (WingedGrid, error){
         {Coords: [3]float64{ 0,-1,-goldenRatio},
          Edges:  []int32{10, 14, 13, 12, 11}}, // 3
         // x-z plane rectangle
-        {Coords: [3]float64{ goldenRatio, 0, 1},
-         Edges:  []int32{ 1,  5, 21, 22,  6}}, // 4
         {Coords: [3]float64{-goldenRatio, 0, 1},
+         Edges:  []int32{ 1,  5, 21, 22,  6}}, // 4
+        {Coords: [3]float64{ goldenRatio, 0, 1},
          Edges:  []int32{ 4,  8, 27, 28,  9}}, // 5
-        {Coords: [3]float64{ goldenRatio, 0,-1},
-         Edges:  []int32{14, 19, 23, 22, 18}}, // 6
         {Coords: [3]float64{-goldenRatio, 0,-1},
+         Edges:  []int32{14, 19, 23, 22, 18}}, // 6
+        {Coords: [3]float64{ goldenRatio, 0,-1},
          Edges:  []int32{11, 16, 27, 26, 15}}, // 7
         // x-y plane rectangle
-        {Coords: [3]float64{ 1, goldenRatio, 0},
-         Edges:  []int32{ 2,  6, 23, 24,  7}}, // 8
-        {Coords: [3]float64{ 1,-goldenRatio, 0},
-         Edges:  []int32{13, 18, 21, 20, 17}}, // 9
         {Coords: [3]float64{-1, goldenRatio, 0},
-         Edges:  []int32{ 3,  7, 25, 26,  8}}, // 10
+         Edges:  []int32{ 2,  6, 23, 24,  7}}, // 8
         {Coords: [3]float64{-1,-goldenRatio, 0},
+         Edges:  []int32{13, 18, 21, 20, 17}}, // 9
+        {Coords: [3]float64{ 1, goldenRatio, 0},
+         Edges:  []int32{ 3,  7, 25, 26,  8}}, // 10
+        {Coords: [3]float64{ 1,-goldenRatio, 0},
          Edges:  []int32{12, 17, 29, 28, 16}}, // 11
     }
     icosahedron.Edges = []WingedEdge{
