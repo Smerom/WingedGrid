@@ -4,6 +4,7 @@ import (
     "errors"
     //"fmt"
     "math"
+    "log"
 )
 // This file contains functions for testing the expected data structure of
 // any wingedGrid
@@ -89,7 +90,7 @@ func FaceOrientation(theGrid WingedGrid, faceIndex int32, tolerance float64) (bo
     }
     faceCenter[0] = faceCenter[0] / count
     faceCenter[1] = faceCenter[1] / count
-    faceCenter[1] = faceCenter[1] / count
+    faceCenter[2] = faceCenter[2] / count
     
     // simply use the first two edges, vectors away from their shared vertex
     // from these we get the face normal vector
@@ -155,10 +156,10 @@ func FaceOrientation(theGrid WingedGrid, faceIndex int32, tolerance float64) (bo
     faceNormal[0] = faceNormal[0] * scaleFactor
     faceNormal[1] = faceNormal[1] * scaleFactor
     faceNormal[2] = faceNormal[2] * scaleFactor
-    
+    log.Printf("Center: %v Normal: %v",faceCenter,faceNormal)
     // they should be parallel (not antiparrallel!)
     //  ie, components should subract to zero, since unit vectors
-    if !((faceNormal[0] - faceCenter[0])*(faceNormal[0] - faceCenter[0])>tolerance ||
+    if ( (faceNormal[0] - faceCenter[0])*(faceNormal[0] - faceCenter[0])>tolerance ||
          (faceNormal[1] - faceCenter[1])*(faceNormal[1] - faceCenter[1])>tolerance ||
          (faceNormal[2] - faceCenter[2])*(faceNormal[2] - faceCenter[2])>tolerance   ) {
          
