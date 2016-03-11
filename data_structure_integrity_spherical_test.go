@@ -95,8 +95,8 @@ func FaceOrientation(theGrid WingedGrid, faceIndex int32, tolerance float64) (bo
     // simply use the first two edges, vectors away from their shared vertex
     // from these we get the face normal vector
     var edgeP, edgeQ WingedEdge
-    edgeP = theGrid.Edges[theFace.Edges[0]]
-    edgeQ = theGrid.Edges[theFace.Edges[1]]
+    edgeP = theGrid.Edges[theFace.Edges[1]]
+    edgeQ = theGrid.Edges[theFace.Edges[0]]
     
     // get and check we find valid vertices
     var startVertexIndex, endVertexIndex int32
