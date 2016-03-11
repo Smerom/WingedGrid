@@ -11,31 +11,31 @@ func BaseIcosahedron() (WingedGrid, error){
     
     icosahedron.Faces = []WingedFace {
         // Duplicate info could be done pragmatically after contructing edges
-        // must be in clockwise order
+        // must be in counter-clockwise order
         // cap 1
-        {Edges: []int32{ 0,  4,  9}}, // 0
-        {Edges: []int32{ 0,  5,  1}}, // 1
-        {Edges: []int32{ 1,  6,  2}}, // 2
-        {Edges: []int32{ 2,  7,  3}}, // 3
-        {Edges: []int32{ 3,  8,  4}}, // 4
+        {Edges: []int32{ 9,  4,  0}}, // 0
+        {Edges: []int32{ 1,  5,  0}}, // 1
+        {Edges: []int32{ 2,  6,  1}}, // 2
+        {Edges: []int32{ 3,  7,  2}}, // 3
+        {Edges: []int32{ 4,  8,  3}}, // 4
         // cap 2
-        {Edges: []int32{10, 19, 14}}, // 5
-        {Edges: []int32{10, 11, 15}}, // 6
-        {Edges: []int32{11, 12, 16}}, // 7
-        {Edges: []int32{12, 13, 17}}, // 8
-        {Edges: []int32{13, 14, 18}}, // 9
+        {Edges: []int32{14, 19, 10}}, // 5
+        {Edges: []int32{15, 11, 10}}, // 6
+        {Edges: []int32{16, 12, 11}}, // 7
+        {Edges: []int32{17, 13, 12}}, // 8
+        {Edges: []int32{18, 14, 13}}, // 9
         // Ring of 10 between caps, clockwise around cap 1
         //   starting with the first face adjacent to face 0
-        {Edges: []int32{ 9, 28, 29}}, // 10
-        {Edges: []int32{17, 20, 29}}, // 11
-        {Edges: []int32{ 5, 20, 21}}, // 12
-        {Edges: []int32{18, 22, 21}}, // 13
-        {Edges: []int32{ 6, 22, 23}}, // 14
-        {Edges: []int32{19, 24, 23}}, // 15
-        {Edges: []int32{ 7, 24, 25}}, // 16
-        {Edges: []int32{15, 26, 25}}, // 17
-        {Edges: []int32{ 8, 26, 27}}, // 18
-        {Edges: []int32{16, 28, 27}}, // 19
+        {Edges: []int32{29, 28,  9}}, // 10
+        {Edges: []int32{29, 20, 17}}, // 11
+        {Edges: []int32{21, 20,  5}}, // 12
+        {Edges: []int32{21, 22, 18}}, // 13
+        {Edges: []int32{23, 22,  6}}, // 14
+        {Edges: []int32{23, 24, 19}}, // 15
+        {Edges: []int32{25, 24,  7}}, // 16
+        {Edges: []int32{25, 26, 15}}, // 17
+        {Edges: []int32{27, 26,  8}}, // 18
+        {Edges: []int32{27, 28, 16}}, // 19
     }
     icosahedron.Vertices = []WingedVertex{
         // Edges are duplicate info, could be done pragmatically after constucting
@@ -75,192 +75,192 @@ func BaseIcosahedron() (WingedGrid, error){
         // clockwise around starting with short edge
         // of the rectangle (y-z)
         {
-            FirstVertexA: 2, FirstVertexB: 0,
+            FirstVertexA: 0, FirstVertexB: 2,
             FaceA: 0, FaceB: 1,
-            PrevA: 9, NextA: 4,
-            PrevB: 1, NextB: 5,
+            PrevA: 4, NextA: 9,
+            PrevB: 9, NextB: 1,
         },  // 0
         {
-            FirstVertexA: 4, FirstVertexB: 0,
+            FirstVertexA: 0, FirstVertexB: 4,
             FaceA: 1, FaceB: 2,
-            PrevA: 5, NextA: 0,
-            PrevB: 2, NextB: 6,
+            PrevA: 0, NextA: 5,
+            PrevB: 6, NextB: 2,
         }, // 1
         {
-            FirstVertexA: 8, FirstVertexB: 0,
+            FirstVertexA: 0, FirstVertexB: 8,
             FaceA: 2, FaceB: 3,
-            PrevA: 6, NextA: 1,
-            PrevB: 3, NextB: 7,
+            PrevA: 1, NextA: 6,
+            PrevB: 7, NextB: 3,
         }, // 2
         {
-            FirstVertexA: 10, FirstVertexB: 0,
+            FirstVertexA: 0, FirstVertexB: 10,
             FaceA: 3, FaceB: 4,
-            PrevA: 7, NextA: 2,
-            PrevB: 4, NextB: 8,
+            PrevA: 2, NextA: 7,
+            PrevB: 8, NextB: 4,
         }, // 3
         {
-            FirstVertexA: 5, FirstVertexB: 0,
+            FirstVertexA: 0, FirstVertexB: 5,
             FaceA: 4, FaceB: 0,
-            PrevA: 8, NextA: 3,
-            PrevB: 0, NextB: 9,
+            PrevA: 3, NextA: 8,
+            PrevB: 9, NextB: 0,
         }, // 4
         // ring of 5 around the base of the cap
         {
-            FirstVertexA: 2, FirstVertexB: 4,
+            FirstVertexA: 4, FirstVertexB: 2,
             FaceA: 1, FaceB: 12,
-            PrevA: 0, NextA: 1,
-            PrevB: 21, NextB: 20,
+            PrevA: 1, NextA: 0,
+            PrevB: 20, NextB: 21,
         }, // 5
         {
-            FirstVertexA: 4, FirstVertexB: 8,
+            FirstVertexA: 8, FirstVertexB: 4,
             FaceA: 2, FaceB: 14,
-            PrevA: 1, NextA: 2,
-            PrevB: 23, NextB: 22,
+            PrevA: 2, NextA: 1,
+            PrevB: 22, NextB: 23,
         }, // 6
         {
-            FirstVertexA: 8, FirstVertexB: 10,
+            FirstVertexA: 10, FirstVertexB: 8,
             FaceA: 3, FaceB: 16,
-            PrevA: 2, NextA: 3,
-            PrevB: 25, NextB: 24,
+            PrevA: 3, NextA: 2,
+            PrevB: 24, NextB: 25,
         }, // 7
         {
-            FirstVertexA: 10, FirstVertexB: 5,
+            FirstVertexA: 5, FirstVertexB: 10,
             FaceA: 4, FaceB: 18,
-            PrevA: 3, NextA: 4,
-            PrevB: 27, NextB: 26,
+            PrevA: 4, NextA: 3,
+            PrevB: 26, NextB: 27,
         }, // 8
         {
-            FirstVertexA: 5, FirstVertexB: 2,
+            FirstVertexA: 2, FirstVertexB: 5,
             FaceA: 0, FaceB: 10,
-            PrevA: 4, NextA: 0,
-            PrevB: 29, NextB: 28,
+            PrevA: 0, NextA: 4,
+            PrevB: 28, NextB: 29,
         }, // 9
         // cap 2 around vertex 3
         // 5 spokes starting between face 5 and 6,
         // counter-clockwise from short edge (y-z) rectangle
         {
-            FirstVertexA: 3, FirstVertexB: 1,
+            FirstVertexA: 1, FirstVertexB: 3,
             FaceA: 5, FaceB: 6,
-            PrevA: 14, NextA: 19,
-            PrevB: 15, NextB: 11,
+            PrevA: 19, NextA: 14,
+            PrevB: 11, NextB: 15,
         }, // 10
         {
-            FirstVertexA: 3, FirstVertexB: 7,
+            FirstVertexA: 7, FirstVertexB: 3,
             FaceA: 6, FaceB: 7,
-            PrevA: 10, NextA: 15,
-            PrevB: 16, NextB: 12,
+            PrevA: 15, NextA: 10,
+            PrevB: 12, NextB: 16,
         }, // 11
         {
-            FirstVertexA: 3, FirstVertexB: 11,
+            FirstVertexA: 11, FirstVertexB: 3,
             FaceA: 7, FaceB: 8,
-            PrevA: 11, NextA: 16,
-            PrevB: 17, NextB: 13,
+            PrevA: 16, NextA: 11,
+            PrevB: 13, NextB: 17,
         }, // 12
         {
-            FirstVertexA: 3, FirstVertexB: 9,
+            FirstVertexA: 9, FirstVertexB: 3,
             FaceA: 8, FaceB: 9,
-            PrevA: 12, NextA: 17,
-            PrevB: 18, NextB: 14,
+            PrevA: 17, NextA: 12,
+            PrevB: 14, NextB: 18,
         }, // 13
         {
-            FirstVertexA: 3, FirstVertexB: 6,
+            FirstVertexA: 6, FirstVertexB: 3,
             FaceA: 9, FaceB: 5,
-            PrevA: 13, NextA: 18,
-            PrevB: 19, NextB: 10,
+            PrevA: 18, NextA: 13,
+            PrevB: 10, NextB: 19,
         }, // 14
         // ring of 5 around the base of cap 2
         {
-            FirstVertexA: 7, FirstVertexB: 1,
+            FirstVertexA: 1, FirstVertexB: 7,
             FaceA: 6, FaceB: 17,
-            PrevA: 11, NextA: 10,
-            PrevB: 25, NextB: 26,
+            PrevA: 10, NextA: 11,
+            PrevB: 26, NextB: 25,
         }, // 15
         {
-            FirstVertexA: 11, FirstVertexB: 7,
+            FirstVertexA: 7, FirstVertexB: 11,
             FaceA: 7, FaceB: 19,
-            PrevA: 12, NextA: 11,
-            PrevB: 27, NextB: 28,
+            PrevA: 11, NextA: 12,
+            PrevB: 28, NextB: 27,
         }, // 16
         {
-            FirstVertexA: 9, FirstVertexB: 11,
+            FirstVertexA: 11, FirstVertexB: 9,
             FaceA: 8, FaceB: 11,
-            PrevA: 13, NextA: 12,
-            PrevB: 29, NextB: 20,
+            PrevA: 12, NextA: 13,
+            PrevB: 20, NextB: 29,
         }, // 17
         {
-            FirstVertexA: 6, FirstVertexB: 9,
+            FirstVertexA: 9, FirstVertexB: 6,
             FaceA: 9, FaceB: 13,
-            PrevA: 14, NextA: 13,
-            PrevB: 21, NextB: 22,
+            PrevA: 13, NextA: 14,
+            PrevB: 22, NextB: 21,
         }, // 18
         {
-            FirstVertexA: 1, FirstVertexB: 6,
+            FirstVertexA: 6, FirstVertexB: 1,
             FaceA: 5, FaceB: 15,
-            PrevA: 10, NextA: 14,
-            PrevB: 23, NextB: 24,
+            PrevA: 14, NextA: 10,
+            PrevB: 24, NextB: 23,
         }, // 19
         // zig-zag down the middle
         // 10 triangles, 10 new edges
         // starting clockwise from end of edge 0
         {
-            FirstVertexA: 9, FirstVertexB: 2,
+            FirstVertexA: 2, FirstVertexB: 9,
             FaceA: 11, FaceB: 12,
-            PrevA: 17, NextA: 29,
-            PrevB: 5, NextB: 21,
+            PrevA: 29, NextA: 17,
+            PrevB: 21, NextB: 5,
         }, // 20
         {
-            FirstVertexA: 9, FirstVertexB: 4,
+            FirstVertexA: 4, FirstVertexB: 9,
             FaceA: 12, FaceB: 13,
-            PrevA: 20, NextA: 5,
-            PrevB: 22, NextB: 18,
+            PrevA: 5, NextA: 20,
+            PrevB: 18, NextB: 22,
         }, // 21
         {
-            FirstVertexA: 6, FirstVertexB: 4,
+            FirstVertexA: 4, FirstVertexB: 6,
             FaceA: 13, FaceB: 14,
-            PrevA: 18, NextA: 21,
-            PrevB: 6, NextB: 23,
+            PrevA: 21, NextA: 18,
+            PrevB: 23, NextB: 6,
         }, // 22
         {
-            FirstVertexA: 6, FirstVertexB: 8,
+            FirstVertexA: 8, FirstVertexB: 6,
             FaceA: 14, FaceB: 15,
-            PrevA: 22, NextA: 6,
-            PrevB: 24, NextB: 19,
+            PrevA: 6, NextA: 22,
+            PrevB: 19, NextB: 24,
         }, // 23
         {
-            FirstVertexA: 1, FirstVertexB: 8,
+            FirstVertexA: 8, FirstVertexB: 1,
             FaceA: 15, FaceB: 16,
-            PrevA: 19, NextA: 23,
-            PrevB: 7, NextB: 25,
+            PrevA: 23, NextA: 19,
+            PrevB: 25, NextB: 7,
         }, // 24
         {
-            FirstVertexA: 1, FirstVertexB: 10,
+            FirstVertexA: 10, FirstVertexB: 1,
             FaceA: 16, FaceB: 17,
-            PrevA: 24, NextA: 7,
-            PrevB: 26, NextB: 15,
+            PrevA: 7, NextA: 24,
+            PrevB: 15, NextB: 26,
         }, // 25
         {
-            FirstVertexA: 7, FirstVertexB: 10,
+            FirstVertexA: 10, FirstVertexB: 7,
             FaceA: 17, FaceB: 18,
-            PrevA: 15, NextA: 25,
-            PrevB: 8, NextB: 27,
+            PrevA: 25, NextA: 15,
+            PrevB: 27, NextB: 8,
         }, // 26
         {
-            FirstVertexA: 7, FirstVertexB: 5,
+            FirstVertexA: 5, FirstVertexB: 7,
             FaceA: 18, FaceB: 19,
-            PrevA: 26, NextA: 8,
-            PrevB: 28, NextB: 16,
+            PrevA: 8, NextA: 26,
+            PrevB: 16, NextB: 28,
         }, // 27
         {
-            FirstVertexA: 11, FirstVertexB: 5,
+            FirstVertexA: 5, FirstVertexB: 11,
             FaceA: 19, FaceB: 10,
-            PrevA: 16, NextA: 27,
-            PrevB: 9, NextB: 29,
+            PrevA: 27, NextA: 16,
+            PrevB: 29, NextB: 9,
         }, // 28
         {
-            FirstVertexA: 11, FirstVertexB: 2,
+            FirstVertexA: 2, FirstVertexB: 11,
             FaceA: 10, FaceB: 11,
-            PrevA: 28, NextA: 9,
-            PrevB: 20, NextB: 17,
+            PrevA: 9, NextA: 28,
+            PrevB: 17, NextB: 20,
         }, // 29 
     }
     return icosahedron, nil
