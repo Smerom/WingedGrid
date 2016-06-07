@@ -21,10 +21,10 @@ func TestBasicDualOfIcosahedron(t *testing.T){
         t.Errorf("Incorrect number of faces. Expected: 12, Got: %d", len(dualGrid.Faces))
     }
     if len(dualGrid.Vertices) != 20 {
-        t.Errorf("Incorrect number of vertices. Expected: 12, Got: %d", len(dualGrid.Vertices))
+        t.Errorf("Incorrect number of vertices. Expected: 20, Got: %d", len(dualGrid.Vertices))
     }
     if len(dualGrid.Edges) != 30 {
-        t.Errorf("Incorrect number of edges. Expected: 12, Got: %d", len(dualGrid.Edges))
+        t.Errorf("Incorrect number of edges. Expected: 30, Got: %d", len(dualGrid.Edges))
     }
 }
 
