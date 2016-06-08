@@ -6,7 +6,10 @@ import (
 )
 
 // assuming triangular tiling of a surface homeomorphic to S2
-func (oldGrid WingedGrid) SubdivideTriangles(edgeSubdivisions int32) WingedGrid {
+func (oldGrid WingedGrid) SubdivideTriangles(edgeSubdivisions int32) (WingedGrid, error) {
+	return oldGrid.subdivideTriangles_new(edgeSubdivisions)
+}
+func (oldGrid WingedGrid) subdivideTriangles_old(edgeSubdivisions int32) WingedGrid {
 	var newGrid WingedGrid
 	var faceCount int32
 	if edgeSubdivisions < 1 {
@@ -78,13 +81,6 @@ func (oldGrid WingedGrid) SubdivideTriangles(edgeSubdivisions int32) WingedGrid 
 	return newGrid
 }
 
-func vectorAngle(first, second [3]float64) float64 {
-	return math.Acos((first[0]*second[0] + first[1]*second[1] + first[2]*second[2]) / (math.Sqrt(first[0]*first[0]+first[1]*first[1]+first[2]*first[2]) * math.Sqrt(second[0]*second[0]+second[1]*second[1]+second[2]*second[2])))
-}
-func vectorLength(vector [3]float64) float64 {
-	return math.Sqrt(vector[0]*vector[0] + vector[1]*vector[1] + vector[2]*vector[2])
-}
-
 func (oldGrid WingedGrid) subdivideEdges(edgeSubdivisions int32, newGrid WingedGrid) {
 	var origVertexCount int32 = int32(len(oldGrid.Vertices))
 	var i, j int32
@@ -147,31 +143,6 @@ func (oldGrid WingedGrid) subdivideEdges(edgeSubdivisions int32, newGrid WingedG
 		newGrid.Edges[i*(edgeSubdivisions+1)+edgeSubdivisions].FirstVertexA = origVertexCount + i*edgeSubdivisions + edgeSubdivisions - 1
 		newGrid.Edges[i*(edgeSubdivisions+1)+edgeSubdivisions].FirstVertexB = edge.FirstVertexB
 	}
-}
-
-func (grid WingedGrid) vertexIndexAtClockwiseIndexOnOldFace(faceIndex, edgeInFaceIndex, clockwiseVertexIndex, edgeSubdivisions int32) int32 {
-	var edgeIndex int32 = grid.Faces[faceIndex].Edges[edgeInFaceIndex]
-	var edge WingedEdge = grid.Edges[edgeIndex]
-
-	if edge.FaceA == faceIndex {
-		return int32(len(grid.Vertices)) + edgeIndex*edgeSubdivisions + clockwiseVertexIndex
-	}
-	if edge.FaceB == faceIndex {
-		return int32(len(grid.Vertices)) + edgeIndex*edgeSubdivisions + edgeSubdivisions - 1 - clockwiseVertexIndex
-	}
-	return -1
-}
-
-func (grid WingedGrid) edgeIndexAtClockwiseIndexOnOldFace(faceIndex, edgeInFaceIndex, clockwiseEdgeIndex, edgeSubdivisions int32) int32 {
-	var oldEdgeIndex int32 = grid.Faces[faceIndex].Edges[edgeInFaceIndex]
-	var oldEdge WingedEdge = grid.Edges[oldEdgeIndex]
-	if oldEdge.FaceA == faceIndex {
-		return oldEdgeIndex*(edgeSubdivisions+1) + clockwiseEdgeIndex
-	}
-	if oldEdge.FaceB == faceIndex {
-		return oldEdgeIndex*(edgeSubdivisions+1) + edgeSubdivisions - clockwiseEdgeIndex
-	}
-	return -1
 }
 
 func (grid WingedGrid) setFaceEdges(faceIndex int32, edges []int32) {
@@ -356,7 +327,7 @@ func (oldGrid WingedGrid) subdivideFaceAtIndex(faceIndex, edgeSubdivisions int32
 	}
 
 	/****** EDGES *******/
-	var edgeOffset int32 = (edgeSubdivisions + 1) * int32(len(oldGrid.Edges))
+	var edgeOffset int32 = (edgeSubdivisions+1)*int32(len(oldGrid.Edges)) + 3*(edgeSubdivisions)*(edgeSubdivisions+1)/2*faceIndex
 	if edgeSubdivisions == 1 {
 		newGrid.Edges[edgeOffset+0].FirstVertexA = int32(len(oldGrid.Vertices)) + bigFace.Edges[0]
 		newGrid.Edges[edgeOffset+0].FirstVertexB = int32(len(oldGrid.Vertices)) + bigFace.Edges[1]
@@ -530,16 +501,4 @@ func (oldGrid WingedGrid) subdivideFaceAtIndex(faceIndex, edgeSubdivisions int32
 	faceEdges[1] = edgeOffset + edgeSubdivisions*(edgeSubdivisions-1)*3/2 + (subFaceCount-rowIndexStart-3)/2 + 2
 	faceEdges[2] = oldGrid.edgeIndexAtClockwiseIndexOnOldFace(faceIndex, 1, edgeSubdivisions, edgeSubdivisions)
 	newGrid.setFaceEdges(indexStart+subFaceCount-1, faceEdges)
-}
-
-func (grid WingedGrid) normalizeVerticesToSphere(baseVertexIndex int) {
-	var wantedLength float64
-	wantedLength = vectorLength(grid.Vertices[baseVertexIndex].Coords)
-	for i, vertex := range grid.Vertices {
-		var currentLength float64
-		currentLength = vectorLength(vertex.Coords)
-		grid.Vertices[i].Coords[0] = vertex.Coords[0] * wantedLength / currentLength
-		grid.Vertices[i].Coords[1] = vertex.Coords[1] * wantedLength / currentLength
-		grid.Vertices[i].Coords[2] = vertex.Coords[2] * wantedLength / currentLength
-	}
 }
