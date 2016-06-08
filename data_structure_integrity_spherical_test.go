@@ -42,7 +42,7 @@ func VertEdgesMatchEdgeOrder(theGrid WingedGrid, vertIndex int32) (bool, error) 
 func EdgeVertsInCorrectOrientation(theGrid WingedGrid, edgeIndex int32) (bool, error) {
 	var theEdge WingedEdge = theGrid.Edges[edgeIndex]
 	var nextEdge WingedEdge = theGrid.Edges[theEdge.NextA]
-	// Second clockwise vertex on theEdge should be the same as the first for
+	// Second vertex on theEdge should be the same as the first for
 	// nextEdgeA for faceA, only need to test for one pair.
 	// Check with second vertex for next edge incase the next edge is the wrong one
 	if theEdge.FirstVertexB == nextEdge.FirstVertexA ||
