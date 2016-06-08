@@ -146,7 +146,7 @@ func TestSubdivisionOfIcosahedronEdgeVertexOrdering(t *testing.T) {
 	}
 }
 
-func TestIcosahedronSubdivisionEdgeLength(t *testing.T) {
+func _TestIcosahedronSubdivisionEdgeLength(t *testing.T) {
 	var err error
 	var baseIcosahedron WingedGrid
 	baseIcosahedron, err = BaseIcosahedron()
@@ -211,6 +211,28 @@ func TestIcosahedronSubdivisionEdgeLength(t *testing.T) {
 	}
 }
 
+func TestIcosahedronSubdivisionEdgeConsistency(t *testing.T) {
+	var err error
+	var baseIcosahedron WingedGrid
+	baseIcosahedron, err = BaseIcosahedron()
+	if err != nil {
+		t.Fatalf("Failed to create base icosahedron: %s", err)
+	}
+	var subdividedGrid WingedGrid
+	subdividedGrid, err = baseIcosahedron.SubdivideTriangles(20)
+	if err != nil {
+		t.Fatalf("Failed to subdivide base icosahedron: %s", err)
+	}
+	for index, _ := range subdividedGrid.Edges {
+		isConsistent, err := EdgePrevNextConsistent(subdividedGrid, int32(index))
+		if err != nil {
+			t.Errorf("Edge %d fails consistency with error: %s", index, err)
+		} else if !isConsistent {
+			t.Errorf("Edge %d is inconsistent", index)
+		}
+	}
+}
+
 func TestIcosahedronSubdivisionFaceAndEdge_EdgeOrderMatches(t *testing.T) {
 	var err error
 	var baseIcosahedron WingedGrid
@@ -231,6 +253,31 @@ func TestIcosahedronSubdivisionFaceAndEdge_EdgeOrderMatches(t *testing.T) {
 			t.Errorf("Face %d edge order fails with error: %s", faceIndex, err)
 		} else if !matches {
 			t.Errorf("Face %d edge order does not match.", faceIndex)
+		}
+	}
+}
+
+func TestIcosahedronSubdivisionVertexAndEdge_EdgeOrderMatches(t *testing.T) {
+	var err error
+	var baseIcosahedron WingedGrid
+	baseIcosahedron, err = BaseIcosahedron()
+	if err != nil {
+		t.Fatalf("Failed to create base icosahedron: %s", err)
+	}
+	var subdividedGrid WingedGrid
+	subdividedGrid, err = baseIcosahedron.SubdivideTriangles(20)
+	if err != nil {
+		t.Fatalf("Failed to subdivide base icosahedron: %s", err)
+	}
+
+	var vertexIndex int32
+	for dummy, _ := range subdividedGrid.Vertices {
+		vertexIndex = int32(dummy)
+		matches, err := VertEdgesMatchEdgeOrder(subdividedGrid, vertexIndex)
+		if err != nil {
+			t.Errorf("Vertex %d edge order fails with error: %s", vertexIndex, err)
+		} else if !matches {
+			t.Errorf("Vertex %d edge order does not match.", vertexIndex)
 		}
 	}
 }

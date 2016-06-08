@@ -13,8 +13,27 @@ import (
 // Returns whether the edge order from the vertex index matches that of the edges
 // NOT YET IMPLEMENTED
 func VertEdgesMatchEdgeOrder(theGrid WingedGrid, vertIndex int32) (bool, error) {
+	var theVertex WingedVertex = theGrid.Vertices[vertIndex]
+	for index, edgeIndex := range theVertex.Edges {
+		if edgeIndex < 0 || edgeIndex >= int32(len(theGrid.Edges)) {
+			return false, errors.New("invalid edge index in vertex")
+		}
+		next, err := theGrid.Edges[edgeIndex].NextEdgeForVertex(vertIndex)
+		if err != nil {
+			return false, err
+		}
+		if index < len(theVertex.Edges)-1 {
+			if next != theVertex.Edges[index+1] {
+				return false, nil
+			}
+		} else {
+			if next != theVertex.Edges[0] {
+				return false, nil
+			}
+		}
 
-	return false, nil
+	}
+	return true, nil
 }
 
 // Returns whether the edge has its vertices ordered correctly,
@@ -31,6 +50,48 @@ func EdgeVertsInCorrectOrientation(theGrid WingedGrid, edgeIndex int32) (bool, e
 		return true, nil
 	}
 	return false, errors.New("This Edge has wrong order")
+}
+
+// checks to see that edges prev and next match
+func EdgePrevNextConsistent(theGrid WingedGrid, edgeIndex int32) (bool, error) {
+	var theEdge WingedEdge = theGrid.Edges[edgeIndex]
+	var testEdge WingedEdge
+	// check faceA
+	testEdge = theGrid.Edges[theEdge.PrevA]
+	testIndex, err := testEdge.NextEdgeForFace(theEdge.FaceA)
+	if err != nil {
+		return false, err
+	}
+	if testIndex != edgeIndex {
+		return false, nil
+	}
+	testEdge = theGrid.Edges[theEdge.NextA]
+	testIndex, err = testEdge.PrevEdgeForFace(theEdge.FaceA)
+	if err != nil {
+		return false, err
+	}
+	if testIndex != edgeIndex {
+		return false, nil
+	}
+
+	// check faceB
+	testEdge = theGrid.Edges[theEdge.PrevB]
+	testIndex, err = testEdge.NextEdgeForFace(theEdge.FaceB)
+	if err != nil {
+		return false, err
+	}
+	if testIndex != edgeIndex {
+		return false, nil
+	}
+	testEdge = theGrid.Edges[theEdge.NextB]
+	testIndex, err = testEdge.PrevEdgeForFace(theEdge.FaceB)
+	if err != nil {
+		return false, err
+	}
+	if testIndex != edgeIndex {
+		return false, nil
+	}
+	return true, nil
 }
 
 // Returns whether the edge order from the face index matches that of the edges
