@@ -554,6 +554,16 @@ func (grid WingedGrid) normalizeVerticesToSphere(baseVertexIndex int) {
 	}
 }
 
+func (grid WingedGrid) NormalizeVerticesToDistanceFromOrigin(wantedLength float64) {
+	for i, vertex := range grid.Vertices {
+		var currentLength float64
+		currentLength = vectorLength(vertex.Coords)
+		grid.Vertices[i].Coords[0] = vertex.Coords[0] * wantedLength / currentLength
+		grid.Vertices[i].Coords[1] = vertex.Coords[1] * wantedLength / currentLength
+		grid.Vertices[i].Coords[2] = vertex.Coords[2] * wantedLength / currentLength
+	}
+}
+
 func (grid WingedGrid) setEdgesForVerticesIfInvalid() {
 	// loop through edges so we only have to touch each one once
 	for index, edge := range grid.Edges {

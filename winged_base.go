@@ -50,6 +50,27 @@ type WingedGrid struct {
 	Vertices []WingedVertex
 }
 
+/******************* Winged Face ********************/
+// returns faces adjacent to this face
+// does not check bounds
+func (theGrid WingedGrid) NeighborsForFace(faceIndex int32) ([]int32, error) {
+	var err error
+	var theFace WingedFace
+	theFace = theGrid.Faces[faceIndex]
+	// one neighbor for each face
+	var neighbors []int32 = make([]int32, len(theFace.Edges))
+	for index, edgeIndex := range theFace.Edges {
+		var theEdge WingedEdge
+		theEdge = theGrid.Edges[edgeIndex]
+		var neighborIndex int32
+		neighborIndex, err = theEdge.AdjacentForFace(faceIndex)
+		// don't check error, pass the last one on to the next function
+		neighbors[index] = neighborIndex
+	}
+
+	return neighbors, err
+}
+
 /******************* Winged Edge ********************/
 // Returns the index of the next clockwise edge for the given face index, or
 // an error if the edge is not associated with the face.
@@ -111,4 +132,47 @@ func (theEdge WingedEdge) PrevEdgeForVertex(vertexIndex int32) (int32, error) {
 		return theEdge.NextEdgeForFace(theEdge.FaceA)
 	}
 	return -1, errors.New("Edge not associated with Vertex.")
+}
+
+// returns the other face associated with an edge, or an error
+// if the edge is not associated with the face.
+func (theEdge WingedEdge) AdjacentForFace(faceIndex int32) (int32, error) {
+	if theEdge.FaceA == faceIndex {
+		return theEdge.FaceB, nil
+	} else if theEdge.FaceB == faceIndex {
+		return theEdge.FaceA, nil
+	}
+	return -1, errors.New("Edge not associated with face.")
+}
+
+// returns the other vertex associated with an edge, or an error
+// if the edge is not associated with the vertex.
+func (theEdge WingedEdge) AdjacentForVertex(vertexIndex int32) (int32, error) {
+	if theEdge.FirstVertexA == vertexIndex {
+		return theEdge.FirstVertexB, nil
+	} else if theEdge.FirstVertexB == vertexIndex {
+		return theEdge.FirstVertexA, nil
+	}
+	return -1, errors.New("Edge not associated with vertex.")
+}
+
+/******************* Winged Vertex ********************/
+// returns faces adjacent to this vertex
+// does not check bounds
+func (theGrid WingedGrid) NeighborsForVertex(vertexIndex int32) ([]int32, error) {
+	var err error
+	var theVertex WingedVertex
+	theVertex = theGrid.Vertices[vertexIndex]
+	// one neighbor for each face
+	var neighbors []int32 = make([]int32, len(theVertex.Edges))
+	for index, edgeIndex := range theVertex.Edges {
+		var theEdge WingedEdge
+		theEdge = theGrid.Edges[edgeIndex]
+		var neighborIndex int32
+		neighborIndex, err = theEdge.AdjacentForVertex(vertexIndex)
+		// don't check error, pass the last one on to the next function
+		neighbors[index] = neighborIndex
+	}
+
+	return neighbors, err
 }
