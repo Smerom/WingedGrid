@@ -146,7 +146,7 @@ func TestSubdivisionOfIcosahedronEdgeVertexOrdering(t *testing.T) {
 	}
 }
 
-func _TestIcosahedronSubdivisionEdgeLength(t *testing.T) {
+func TestIcosahedronSubdivisionEdgeLength(t *testing.T) {
 	var err error
 	var baseIcosahedron WingedGrid
 	baseIcosahedron, err = BaseIcosahedron()
@@ -154,7 +154,7 @@ func _TestIcosahedronSubdivisionEdgeLength(t *testing.T) {
 		t.Fatalf("Failed to create base icosahedron: %s", err)
 	}
 	var subdividedGrid WingedGrid
-	subdividedGrid, err = baseIcosahedron.SubdivideTriangles(2)
+	subdividedGrid, err = baseIcosahedron.SubdivideTriangles(1000)
 	if err != nil {
 		t.Fatalf("Failed to subdivide base icosahedron: %s", err)
 	}
@@ -196,6 +196,10 @@ func _TestIcosahedronSubdivisionEdgeLength(t *testing.T) {
 
 	expectedLength = math.Sqrt(dx*dx + dy*dy + dz*dz)
 
+	var minRatio, maxRatio float64
+	minRatio = math.MaxFloat64
+	maxRatio = 0
+
 	for index, edge = range subdividedGrid.Edges {
 		dx = subdividedGrid.Vertices[edge.FirstVertexA].Coords[0] - subdividedGrid.Vertices[edge.FirstVertexB].Coords[0]
 
@@ -205,10 +209,18 @@ func _TestIcosahedronSubdivisionEdgeLength(t *testing.T) {
 
 		length := math.Sqrt(dx*dx + dy*dy + dz*dz)
 		// square of error within tolerance
+		if length/expectedLength > maxRatio {
+			maxRatio = length / expectedLength
+		}
+		if length/expectedLength < minRatio {
+			minRatio = length / expectedLength
+		}
 		if (expectedLength-length)*(expectedLength-length) > tolerance {
-			t.Errorf("Edge %d out of tolerance, length is: %f", index, length)
+			//t.Errorf("Edge %d out of tolerance at %f ratio, length is: %f", index, length/expectedLength, length)
 		}
 	}
+	t.Logf("Max ratio to expected: %f", maxRatio)
+	t.Logf("Min ratio to expected: %f", minRatio)
 }
 
 func TestIcosahedronSubdivisionEdgeConsistency(t *testing.T) {

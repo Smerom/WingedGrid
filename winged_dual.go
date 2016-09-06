@@ -52,34 +52,34 @@ func (startGrid WingedGrid) CreateDual() (WingedGrid, error) {
 		// faces are swapped from vertices
 		dualGrid.Edges[index].FirstVertexA = startEdge.FaceB
 		dualGrid.Edges[index].FirstVertexB = startEdge.FaceA
+	}
 
-		// set prev and next
-		for faceIndex, face := range dualGrid.Faces {
-			for index, edgeIndex := range face.Edges {
-				var theEdge WingedEdge = dualGrid.Edges[edgeIndex]
-				if theEdge.FaceA == int32(faceIndex) {
-					if index == 0 {
-						dualGrid.Edges[edgeIndex].PrevA = face.Edges[len(face.Edges)-1]
-						dualGrid.Edges[edgeIndex].NextA = face.Edges[1]
-					} else if index == len(face.Edges)-1 {
-						dualGrid.Edges[edgeIndex].PrevA = face.Edges[len(face.Edges)-2]
-						dualGrid.Edges[edgeIndex].NextA = face.Edges[0]
-					} else {
-						dualGrid.Edges[edgeIndex].PrevA = face.Edges[index-1]
-						dualGrid.Edges[edgeIndex].NextA = face.Edges[index+1]
-					}
+	// set prev and next
+	for faceIndex, face := range dualGrid.Faces {
+		for index, edgeIndex := range face.Edges {
+			var theEdge WingedEdge = dualGrid.Edges[edgeIndex]
+			if theEdge.FaceA == int32(faceIndex) {
+				if index == 0 {
+					dualGrid.Edges[edgeIndex].PrevA = face.Edges[len(face.Edges)-1]
+					dualGrid.Edges[edgeIndex].NextA = face.Edges[1]
+				} else if index == len(face.Edges)-1 {
+					dualGrid.Edges[edgeIndex].PrevA = face.Edges[len(face.Edges)-2]
+					dualGrid.Edges[edgeIndex].NextA = face.Edges[0]
+				} else {
+					dualGrid.Edges[edgeIndex].PrevA = face.Edges[index-1]
+					dualGrid.Edges[edgeIndex].NextA = face.Edges[index+1]
 				}
-				if theEdge.FaceB == int32(faceIndex) {
-					if index == 0 {
-						dualGrid.Edges[edgeIndex].PrevB = face.Edges[len(face.Edges)-1]
-						dualGrid.Edges[edgeIndex].NextB = face.Edges[1]
-					} else if index == len(face.Edges)-1 {
-						dualGrid.Edges[edgeIndex].PrevB = face.Edges[len(face.Edges)-2]
-						dualGrid.Edges[edgeIndex].NextB = face.Edges[0]
-					} else {
-						dualGrid.Edges[edgeIndex].PrevB = face.Edges[index-1]
-						dualGrid.Edges[edgeIndex].NextB = face.Edges[index+1]
-					}
+			}
+			if theEdge.FaceB == int32(faceIndex) {
+				if index == 0 {
+					dualGrid.Edges[edgeIndex].PrevB = face.Edges[len(face.Edges)-1]
+					dualGrid.Edges[edgeIndex].NextB = face.Edges[1]
+				} else if index == len(face.Edges)-1 {
+					dualGrid.Edges[edgeIndex].PrevB = face.Edges[len(face.Edges)-2]
+					dualGrid.Edges[edgeIndex].NextB = face.Edges[0]
+				} else {
+					dualGrid.Edges[edgeIndex].PrevB = face.Edges[index-1]
+					dualGrid.Edges[edgeIndex].NextB = face.Edges[index+1]
 				}
 			}
 		}
