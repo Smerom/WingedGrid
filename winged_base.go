@@ -37,8 +37,9 @@ type WingedEdge struct {
 
 // represents a vertex point, currently as an embedding in 3-space
 type WingedVertex struct {
-	Coords [3]float64 // x, y, z
-	Edges  []int32    // in clockwise order, indexed from Grid
+	Coords          [3]float64 // x, y, z
+	Edges           []int32    // in clockwise order, indexed from Grid
+	vertexNeighbors []int32
 }
 
 // WingedGrid is the structure to be sent across a network as the full
@@ -157,22 +158,25 @@ func (theEdge WingedEdge) AdjacentForVertex(vertexIndex int32) (int32, error) {
 }
 
 /******************* Winged Vertex ********************/
-// returns faces adjacent to this vertex
-// does not check bounds
+// returns the vertex indices adjacent to this vertex
 func (theGrid WingedGrid) NeighborsForVertex(vertexIndex int32) ([]int32, error) {
 	var err error
-	var theVertex WingedVertex
-	theVertex = theGrid.Vertices[vertexIndex]
-	// one neighbor for each face
-	var neighbors []int32 = make([]int32, len(theVertex.Edges))
-	for index, edgeIndex := range theVertex.Edges {
-		var theEdge WingedEdge
-		theEdge = theGrid.Edges[edgeIndex]
-		var neighborIndex int32
-		neighborIndex, err = theEdge.AdjacentForVertex(vertexIndex)
-		// don't check error, pass the last one on to the next function
-		neighbors[index] = neighborIndex
+	if vertexIndex > int32(len(theGrid.Vertices))-1 {
+		return nil, errors.New("Index out of bounds.")
+	}
+	// check if the neighbors have already been found
+	if len(theGrid.Vertices[vertexIndex].vertexNeighbors) == 0 {
+		theGrid.Vertices[vertexIndex].vertexNeighbors = make([]int32, len(theGrid.Vertices[vertexIndex].Edges))
+		// one neighbor for each face
+		for index, edgeIndex := range theGrid.Vertices[vertexIndex].Edges {
+			var theEdge WingedEdge
+			theEdge = theGrid.Edges[edgeIndex]
+			var neighborIndex int32
+			neighborIndex, err = theEdge.AdjacentForVertex(vertexIndex)
+			// don't check error, pass the last one on to the next function
+			theGrid.Vertices[vertexIndex].vertexNeighbors[index] = neighborIndex
+		}
 	}
 
-	return neighbors, err
+	return theGrid.Vertices[vertexIndex].vertexNeighbors, err
 }
