@@ -87,8 +87,6 @@ func (oldGrid WingedGrid) SubdivideTriangles(edgeSubdivisions int32) (WingedGrid
 	// set vertex edge array
 	dividedGrid.setEdgesForVerticesIfInvalid()
 
-	dividedGrid.normalizeVerticesToSphere(0)
-
 	return dividedGrid, err
 }
 
@@ -289,7 +287,7 @@ func (oldGrid WingedGrid) setSubdivisionFaceEdges(edgeSubdivisions int32, divide
 		// bottom corner 1
 		faceEdges = dividedGrid.Faces[indexStart+rowIndexStart+0].Edges
 		faceEdges[0] = oldGrid.edgeIndexAtClockwiseIndexOnOldFace(faceIndex, 0, 0, edgeSubdivisions)
-		faceEdges[1] = edgeOffset + i*(edgeSubdivisions-1)*3/2 + 1
+		faceEdges[1] = edgeOffset + edgeSubdivisions*(edgeSubdivisions-1)*3/2 + 1
 		faceEdges[2] = oldGrid.edgeIndexAtClockwiseIndexOnOldFace(faceIndex, 2, edgeSubdivisions, edgeSubdivisions)
 		// bottom edge
 		for j = 1; j < subFaceCount-rowIndexStart-1; j++ {

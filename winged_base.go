@@ -72,6 +72,31 @@ func (theGrid WingedGrid) NeighborsForFace(faceIndex int32) ([]int32, error) {
 	return neighbors, err
 }
 
+func (theGrid WingedGrid) FaceCenter(faceIndex int32) ([3]float64, error) {
+	var startFace WingedFace = theGrid.Faces[faceIndex]
+	var faceCenter [3]float64
+	var count float64
+	var err error
+	for _, edgeIndex := range startFace.Edges {
+		var vertex WingedVertex
+		var vertexIndex int32
+		vertexIndex, err = theGrid.Edges[edgeIndex].FirstVertexForFace(faceIndex)
+		if err != nil {
+			return faceCenter, err
+		}
+		vertex = theGrid.Vertices[vertexIndex]
+		faceCenter[0] = faceCenter[0] + vertex.Coords[0]
+		faceCenter[1] = faceCenter[1] + vertex.Coords[1]
+		faceCenter[2] = faceCenter[2] + vertex.Coords[2]
+		count = count + 1
+	}
+	faceCenter[0] = faceCenter[0] / count
+	faceCenter[1] = faceCenter[1] / count
+	faceCenter[2] = faceCenter[2] / count
+
+	return faceCenter, nil
+}
+
 /******************* Winged Edge ********************/
 // Returns the index of the next clockwise edge for the given face index, or
 // an error if the edge is not associated with the face.

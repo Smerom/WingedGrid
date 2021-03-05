@@ -154,10 +154,13 @@ func TestIcosahedronSubdivisionEdgeLength(t *testing.T) {
 		t.Fatalf("Failed to create base icosahedron: %s", err)
 	}
 	var subdividedGrid WingedGrid
-	subdividedGrid, err = baseIcosahedron.SubdivideTriangles(1000)
+	subdividedGrid, err = baseIcosahedron.SubdivideTriangles(10)
 	if err != nil {
 		t.Fatalf("Failed to subdivide base icosahedron: %s", err)
 	}
+
+	subdividedGrid.NormalizeVerticesToDistanceFromOrigin(1.0)
+
 	// common vars to each part of the test
 	var edge WingedEdge
 	var index int
