@@ -15,6 +15,12 @@ func NewIcoSubCalc() *IcoSubCalc {
 	}
 }
 
+func NewSubIcoSubCalc(grid WingedGrid) *IcoSubCalc {
+	return &IcoSubCalc{
+		baseIco: grid,
+	}
+}
+
 // VertexAndNeighbors does things
 func (isc *IcoSubCalc) VertexAndNeighbors(idx int, subDivs int) WingedVertex {
 	return WingedVertex{
